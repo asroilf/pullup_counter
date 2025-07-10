@@ -12,7 +12,7 @@ load_dotenv()
 
 token = os.getenv("PULLUPS_BOT_TOKEN")
 log.info(f"Bot is up and running!")
-bot = AsyncTeleBot('5397138212:AAFIol6NURWoOB_Cl-WyOmJuNmyAGgHUwmE')
+bot = AsyncTeleBot(token)
 
 @bot.message_handler(command=['start', 'hello'])
 async def send_hello(message):
