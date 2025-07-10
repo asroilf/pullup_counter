@@ -94,11 +94,11 @@ Now build an image of a container
   docker build -t pullup_bot .
 ```
 Upon successful building you should see the following:
-![img](g.o)
+![img](media/docker_build.png)
 
 Now run the container:
 ```bash
   docker run pullup_bot
 ```
 The output in the terminal will be:
-![image](/image.png)
+![image](media/docker_run.png)
