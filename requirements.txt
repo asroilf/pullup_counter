@@ -1,0 +1,8 @@
+mediapipe
+opencv-python
+dotenv
+pytelegrambotapi
+schedule
+videohash
+peewee
+aiofiles
