@@ -1,2 +1,4 @@
 *.swp
 __pycache__
+service/__pycache__
+models/__pycache__
