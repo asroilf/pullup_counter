@@ -2,3 +2,5 @@
 __pycache__
 service/__pycache__
 models/__pycache__
+telegram/__pycache__
+
