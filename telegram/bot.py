@@ -4,7 +4,7 @@ from telebot.async_telebot import AsyncTeleBot
 from service.pullup_counter import PullupCounter
 from service.utils import Database, VideoFile, log
 from service.reports import Report 
-from models.models import CompleteReport
+from models.CompleteReport import CompleteReport
 
 load_dotenv()
 
@@ -12,7 +12,8 @@ token = os.getenv("PULLUPS_BOT_TOKEN")
 chat_id = os.getenv("CHAT_ID")      # For groupchats
 thread_id = os.getenv("THREAD_ID")  # For groups with topics enabled
 log.info(f"Bot is up and running!")
-bot = AsyncTeleBot(token)
+Database.create_tables()
+bot = AsyncTeleBot('5397138212:AAGaFHLpHFu3lRgSxVhkOhvJG3s8c3j0JH8')
 
 @bot.message_handler(commands=['start', 'hello'])
 async def send_hello(message):
@@ -29,7 +30,7 @@ async def receive_video(message):
         download_video = await bot.download_file(file_info.file_path)
 
         filename=await VideoFile.save(from_user, download_video)
-        resent = await VideoFile.is_uploaded(user, filename)
+        resent = False #await VideoFile.is_uploaded(user, filename)
 
         if resent:
             await bot.reply_to(message, "You have sent the same video more than once!")

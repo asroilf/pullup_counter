@@ -1,4 +1,7 @@
-from models.models import *
+from models.VideoHash import VideoHash
+from models.User import *
+from models.DailyPerformance import DailyPerformance
+from models.CompleteReport import CompleteReport
 import sys, logging
 from datetime import datetime
 import pickle, aiofiles
@@ -13,6 +16,13 @@ console_handler.setFormatter(console_formatter)
 log.addHandler(console_handler)
 
 class Database:
+
+    @staticmethod
+    def create_tables():
+        if db.is_closed():
+            db.connect()
+        db.create_tables([User, VideoHash, DailyPerformance, CompleteReport])
+        db.close()
 
     @staticmethod
     async def check_newuser(username, first_name):
