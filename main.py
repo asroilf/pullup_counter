@@ -9,7 +9,7 @@ def async_wrapper():
         LOG.info("Reached the wrapper method")
         event_loop.call_soon_threadsafe(asyncio.create_task, send_periodic_report())
 
-schedule.every().day.at("11:05").do(send_periodic_report)
+schedule.every().day.at("11:05").do(async_wrapper)
 
 def run_schedule():
     while True:
