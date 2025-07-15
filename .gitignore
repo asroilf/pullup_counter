@@ -1,2 +1,6 @@
 *.swp
-__pycache__
+__pycache__/
+*.db
+*.log
+*.mp4
+*.avi

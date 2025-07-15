@@ -1,8 +1,9 @@
-mediapipe
-opencv-python
-dotenv
-pytelegrambotapi
-schedule
-videohash
-peewee
-aiofiles
+mediapipe==0.10.21
+opencv-python==4.11
+dotenv==0.9.9
+pytelegrambotapi==4.27
+schedule=1.2
+videohash==3.0.1
+peewee==3.18
+aiofiles==24.1
+Pillow<10.0
