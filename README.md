@@ -1,6 +1,6 @@
 # Pull-up Counter Bot
 
-It is a bot that gets the user videos of doing pull-ups and produces the number that's the number of reps in the video 
+It is a bot that gets the user videos of doing pull-ups and produces the number of reps in the video 
 
 #### Key Tools Used:
 MediaPipe, Telegram, peewee, Open-cv, Sqlite3, videohash etc.
