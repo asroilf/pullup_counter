@@ -2,19 +2,25 @@ import threading, time
 import schedule, asyncio
 from telegram import BOT, send_periodic_report
 from service import LOG
+
 event_loop = None
 
 def async_wrapper():
     if event_loop and event_loop.is_running():
-        LOG.info("Reached the wrapper method")
         event_loop.call_soon_threadsafe(asyncio.create_task, send_periodic_report())
 
-schedule.every().day.at("11:05").do(async_wrapper)
+
+schedule.every().day.at("15:49").do(async_wrapper)
 
 def run_schedule():
+    LOG.info("run_schedule thread started")
     while True:
-        schedule.run_pending()
-        time.sleep(1)
+        try:
+            schedule.run_pending()
+            time.sleep(1)
+        except Exception as e:
+            print(e)
+
 
 async def main():
     global event_loop

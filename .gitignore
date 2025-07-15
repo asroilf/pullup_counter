@@ -1,6 +1,6 @@
 *.swp
 __pycache__/
-new_db.db
-bot_logs.log
+*.db
+*.log
 *.mp4
 *.avi

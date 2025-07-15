@@ -1,8 +1,48 @@
 from models import User, DailyPerformance
 from datetime import datetime
 from .utils import LOG
-
+from peewee import fn
 class Report:
+
+    @staticmethod
+    async def get_complete_report():
+        try:
+            current_datetime = datetime.now() 
+            time = str(current_datetime.time())
+            date = str(current_datetime.date())
+
+            users = await Report._get_today(date)
+            complete_report = DailyPerformance.select(
+                    DailyPerformance.user, 
+                    fn.SUM(DailyPerformance.reps)
+                    ).group_by(
+                            DailyPerformance.user
+                            ).order_by(
+                                    DailyPerformance.reps.desc())
+
+            format = f"<b> Report </b>\n<b>Date:</b> {date}\n\n"
+            format+="Top Ninjas:\n------------------------------------------------\n"
+            places=1
+            for i in complete_report:
+                if places==1:
+                    format += f" 🥇#{i.user.username}\n"
+                elif places==2:
+                    format += f" 🥈#{i.user.username}\n"
+                elif places==3:
+                    format += f" 🥉#{i.user.username}\n"
+                else:
+                    format += f"  #{i.user.username}\n"
+                places+=1
+                days, skipped, daily = await Report._get_user_report(i.user.username)
+                for j in daily:
+                    format+=j
+                format+=f"\n <b>Summary</b> : Workout days: {days-skipped} | Skipped days: {skipped} | Total reps: { i.reps }\n"
+                format+="-----------------------------------------\n"
+            LOG.info("Complete Report for users created!")
+            return format
+        except Exception as se:
+            LOG.error(se)
+            return "f"
 
     @staticmethod
     async def _get_today(date):
@@ -41,38 +81,3 @@ class Report:
 
         return [day-1, skipped, result]
 
-    @staticmethod
-    async def get_complete_report():
-        current_datetime = datetime.now() 
-        time = str(current_datetime.time())
-        date = str(current_datetime.date())
-
-        users = await Report._get_today(date)
-        complete_report = DailyPerformance.select(
-                DailyPerformance.user, 
-                fn.SUM(DailyPerformance.reps)
-                ).group_by(
-                        DailyPerformance.user
-                        ).order_by(
-                                DailyPerformance.reps.desc())
-
-        format = f"<b> Report </b>\n<b>Date:</b> {date}\n\n"
-        format+="Top Ninjas:\n------------------------------------------------\n"
-        places=1
-        for i in complete_report:
-            if places==1:
-                format += f" 🥇#{i.user.username}\n"
-            elif places==2:
-                format += f" 🥈#{i.user.username}\n"
-            elif places==3:
-                format += f" 🥉#{i.user.username}\n"
-            else:
-                format += f"  #{i.user.username}\n"
-            places+=1
-            days, skipped, daily = await Report._get_user_report(i.user.username)
-            for j in daily:
-                format+=j
-            format+=f"\n <b>Summary</b> : Workout days: {days-skipped} | Skipped days: {skipped} | Total reps: { i.reps }\n"
-            format+="-----------------------------------------\n"
-        LOG.info("Complete Report for users created!")
-        return format

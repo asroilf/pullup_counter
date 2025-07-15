@@ -12,12 +12,13 @@ chat_id = os.getenv("CHAT_ID")      # For groupchats
 thread_id = os.getenv("THREAD_ID")  # For groups with topics enabled
 LOG.info(f"Bot is up and running!")
 Database.create_tables()
-BOT = AsyncTeleBot('5397138212:AAGaFHLpHFu3lRgSxVhkOhvJG3s8c3j0JH8')
+BOT = AsyncTeleBot(token)
 
 @BOT.message_handler(commands=['start', 'hello'])
 async def send_hello(message):
     await BOT.reply_to(message, "Hello, welcome to Pull-ups counter bot!")
     await BOT.send_message("To use this bot just upload the video of your pull-ups and it will count the number of reps in the video.")
+    await BOT.send_message("Rules of using this bot is simple! Send a video of doing pull ups and it will give number of pull-ups in the video back to you. The bot will not recognize any message other than a video file.")
 
 @BOT.message_handler(content_types = ['video'])
 async def receive_video(message):
@@ -54,9 +55,9 @@ async def receive_video(message):
 
 
 async def send_periodic_report():
-    report = await Report.get_complete_report()
     LOG.info("reached the periodic report function")
     try:
+        report = await Report.get_complete_report()
         message = CompleteReport.select().first()
         await BOT.delete_message(chat_id=chat_id, message_id=message.message_id)
         message.delete_instance()
