@@ -1,12 +1,20 @@
 import os
 from dotenv import load_dotenv
 from telebot.async_telebot import AsyncTeleBot
-from service.pullup_counter import PullupCounter
-from service.utils import Database, VideoFile, log
-from service.reports import Report 
-from models.CompleteReport import CompleteReport
-
+from service import PullupCounter
+from service import Database, VideoFile
+from service import Report 
+from models import CompleteReport
+import sys, logging
 load_dotenv()
+
+logging.basicConfig(level=logging.INFO, filename="bot_logs.log", format="%(asctime)s - %(levelname)s - %(message)s")
+log = logging.getLogger(__name__)
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.INFO)
+console_formatter = logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')
+console_handler.setFormatter(console_formatter)
+log.addHandler(console_handler)
 
 token = os.getenv("PULLUPS_BOT_TOKEN")
 chat_id = os.getenv("CHAT_ID")      # For groupchats

@@ -1,6 +1,14 @@
 from models.models import *
 from datetime import datetime
-from .utils import log
+import sys, logging
+
+logging.basicConfig(level=logging.INFO, filename="bot_logs.log", format="%(asctime)s - %(levelname)s - %(message)s")
+log = logging.getLogger(__name__)
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setLevel(logging.INFO)
+console_formatter = logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')
+console_handler.setFormatter(console_formatter)
+log.addHandler(console_handler)
 
 class Report:
 

@@ -2,3 +2,5 @@
 __pycache__/
 new_db.db
 bot_logs.log
+*.mp4
+*.avi
