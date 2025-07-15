@@ -1,14 +1,6 @@
-from models.models import *
+from models import User, DailyPerformance
 from datetime import datetime
-import sys, logging
-
-logging.basicConfig(level=logging.INFO, filename="bot_logs.log", format="%(asctime)s - %(levelname)s - %(message)s")
-log = logging.getLogger(__name__)
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setLevel(logging.INFO)
-console_formatter = logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')
-console_handler.setFormatter(console_formatter)
-log.addHandler(console_handler)
+from .utils import LOG
 
 class Report:
 
@@ -33,6 +25,8 @@ class Report:
     @staticmethod
     async def _get_user_report(user):
         user = User.get_or_none(User.username==user)
+        if not user:
+            return
         u = DailyPerformance.select().where(DailyPerformance.user==user).order_by(DailyPerformance.date)
         result=""
         day=1
@@ -80,5 +74,5 @@ class Report:
                 format+=j
             format+=f"\n <b>Summary</b> : Workout days: {days-skipped} | Skipped days: {skipped} | Total reps: { i.reps }\n"
             format+="-----------------------------------------\n"
-        log.info("Complete Report for users created!")
+        LOG.info("Complete Report for users created!")
         return format

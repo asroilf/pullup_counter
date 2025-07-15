@@ -1,6 +1,6 @@
-from peewee import *
-from models.User import User
-db = SqliteDatabase('new_db.db')
+from peewee import Model, AutoField, BlobField, ForeignKeyField
+from .User import User
+from .db import DB
 
 class VideoHash(Model):
     id = AutoField()
@@ -8,5 +8,5 @@ class VideoHash(Model):
     video_hash = BlobField()
 
     class Meta:
-        database = db
+        database = DB
 

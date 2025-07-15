@@ -1,37 +1,23 @@
-from models import User, db
-from models import VideoHash
-from models import DailyPerformance
-from models import CompleteReport
+from models import User, VideoHash, DailyPerformance, CompleteReport, DB
 from datetime import datetime
-import sys, logging
-from datetime import datetime
-import pickle, aiofiles
-import videohash
-
-logging.basicConfig(level=logging.INFO, filename="bot_logs.log", format="%(asctime)s - %(levelname)s - %(message)s")
-log = logging.getLogger(__name__)
-console_handler = logging.StreamHandler(sys.stdout)
-console_handler.setLevel(logging.INFO)
-console_formatter = logging.Formatter('%(asctime)s | %(levelname)s: %(message)s')
-console_handler.setFormatter(console_formatter)
-log.addHandler(console_handler)
+from .utils import LOG
 
 class Database:
 
     @staticmethod
     def create_tables():
-        if db.is_closed():
-            db.connect()
-        db.create_tables([User, VideoHash, DailyPerformance, CompleteReport])
-        db.close()
+        if DB.is_closed():
+            DB.connect()
+        DB.create_tables([User, VideoHash, DailyPerformance, CompleteReport])
+        DB.close()
 
     @staticmethod
     async def check_newuser(username, first_name):
         user, created = User.get_or_create(username=username, defaults={'name':first_name})
         if created:
-            log.info("User not found in the database so it is created!")
+            LOG.info("User not found in the database so it is created!")
         else:
-            log.info("User is found in the database!")
+            LOG.info("User is found in the database!")
         return user
 
     @staticmethod
@@ -39,14 +25,15 @@ class Database:
 
         date = datetime.now().date()
         user = User.get(username=username)
-        log.info('User retrieved success')
+        LOG.info('User retrieved success')
         performance, created = DailyPerformance.get_or_create(user=user, date=date, defaults={'reps':rips})
         if created:
-            log.info(f"User {username} not found for {date}. Creating a new record for the user")
+            LOG.info(f"User {username} not found for {date}. Creating a new record for the user")
         else:
-            log.info(f"User {username} has been retrieved from database")
+            LOG.info(f"User {username} has been retrieved from database")
             user_reps = performance.reps+rips
             performance.reps = user_reps
             performance.save()
-            log.info(f"User {username} data is updated to {user_reps} for {date}.")
+            LOG.info(f"User {username} data is updated to {user_reps} for {date}.")
         return performance.reps
+
