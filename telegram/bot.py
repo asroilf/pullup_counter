@@ -1,12 +1,10 @@
 import os
 from dotenv import load_dotenv
 from telebot.async_telebot import AsyncTeleBot
-from service import PullupCounter
-from service import Database, VideoFile
-from service import Report 
-from models import CompleteReport
-from service import LOG
+from service import PullupCounter, Database, VideoFile, PerformanceReport, LOG
+from models import Report
 
+load_dotenv()
 token = os.getenv("PULLUPS_BOT_TOKEN")
 chat_id = os.getenv("CHAT_ID")      # For groupchats
 thread_id = os.getenv("THREAD_ID")  # For groups with topics enabled
@@ -30,7 +28,7 @@ async def receive_video(message):
         download_video = await BOT.download_file(file_info.file_path)
 
         filename=await VideoFile.save(from_user, download_video)
-        resent = False #await VideoFile.is_uploaded(user, filename)
+        resent = await VideoFile.is_uploaded(user, filename)
 
         if resent:
             await BOT.reply_to(message, "You have sent the same video more than once!")
@@ -56,19 +54,19 @@ async def receive_video(message):
 
 async def send_periodic_report():
     LOG.info("reached the periodic report function")
+    report = await PerformanceReport.get_complete_report()
     try:
-        report = await Report.get_complete_report()
-        message = CompleteReport.select().first()
+        message = Report.select().first()
         await BOT.delete_message(chat_id=chat_id, message_id=message.message_id)
         message.delete_instance()
 
         sent = await BOT.send_message(chat_id=chat_id, text=report, parse_mode='HTML', message_thread_id=thread_id)
-        CompleteReport.create(message_id=sent.message_id, message=report)
+        Report.create(message_id=sent.message_id, message=report)
     except Exception as e:
         LOG.error(e)
-
+        print(chat_id, thread_id)
         sent = await BOT.send_message(chat_id=chat_id, text=report, parse_mode='HTML', message_thread_id=thread_id)
-        CompleteReport.create(message_id=sent.message_id, message=report)
+        Report.create(message_id=sent.message_id, message=report)
         
     LOG.info("Daily report sent!")
 

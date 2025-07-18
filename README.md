@@ -94,11 +94,21 @@ Now build an image of a container
   docker build -t pullup_bot .
 ```
 Upon successful building you should see the following:
-![img](media/docker_build.png)
+```bash
+    ...
+    Step 10/10 : CMD ["python", "main.py"]
+     ---> Running in 679a707447f0
+     ---> Removed intermediate container 679a707447f0
+     ---> 4b57f95b1cdc
+    Successfully built 4b57f95b1cdc
+    Successfully tagged pullup_bot:latest
+```
 
 Now run the container:
 ```bash
   docker run pullup_bot
 ```
 The output in the terminal will be:
-![image](media/docker_run.png)
+```bash
+    2025-07-15 12:22:05,778 | INFO: Bot is up and running!
+```

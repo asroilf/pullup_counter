@@ -1,5 +1,4 @@
-from .VideoHash import VideoHash
-from .CompleteReport import CompleteReport
+from .Video import Video
+from .Report import Report
 from .User import User
 from .DailyPerformance import DailyPerformance
-from .db import DB

@@ -1,6 +1,7 @@
-from models import User, VideoHash, DailyPerformance, CompleteReport, DB
+from models import User, Video, DailyPerformance, Report
 from datetime import datetime
-from .utils import LOG
+from .logger import LOG
+from .db import DB
 
 class Database:
 
@@ -8,7 +9,7 @@ class Database:
     def create_tables():
         if DB.is_closed():
             DB.connect()
-        DB.create_tables([User, VideoHash, DailyPerformance, CompleteReport])
+        DB.create_tables([User, Video, DailyPerformance, Report])
         DB.close()
 
     @staticmethod
