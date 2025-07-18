@@ -15,39 +15,24 @@ Once the bot receives the video, it processes the video through several stages.
 For pose detection pre-trained MediaPipe model by Google is used. It detects human body and extracts landmarks of human joints. Once extracted, it numbers them for reference
 ![mediapipe_landmark](https://ai.google.dev/static/mediapipe/images/solutions/pose_landmarks_index.png)
 
-0 - nose\
-1 - left eye (inner)\
-2 - left eye\
-3 - left eye (outer)\
-4 - right eye (inner)\
-5 - right eye\
-6 - right eye (outer)\
-7 - left ear\
-8 - right ear\
-9 - mouth (left)\
-10 - mouth (right)\
-11 - left shoulder\
-12 - right shoulder\
-13 - left elbow\
-14 - right elbow\
-15 - left wrist\
-16 - right wrist\
-17 - left pinky\
-18 - right pinky\
-19 - left index\
-20 - right index\
-21 - left thumb\
-22 - right thumb\
-23 - left hip\
-24 - right hip\
-25 - left knee\
-26 - right knee\
-27 - left ankle\
-28 - right ankle\
-29 - left heel\
-30 - right heel\
-31 - left foot index\
-32 - right foot index\
+|-----------------------------|------------------------------|
+| 0 - nose                    | 17 - left pinky              |
+| 1 - left eye (inner)        | 18 - right pinky             |
+| 2 - left eye                | 19 - left index              |
+| 3 - left eye (outer)        | 20 - right index             |
+| 4 - right eye (inner)       | 21 - left thumb              |
+| 5 - right eye               | 22 - right thumb             |
+| 6 - right eye (outer)       | 23 - left hip                |
+| 7 - left ear                | 24 - right hip               |
+| 8 - right ear               | 25 - left knee               |
+| 9 - mouth (left)            | 26 - right knee              |
+| 10 - mouth (right)          | 27 - left ankle              |
+| 11 - left shoulder          | 28 - right ankle             |
+| 12 - right shoulder         | 29 - left heel               |
+| 13 - left elbow             | 30 - right heel              |
+| 14 - right elbow            | 31 - left foot index         |
+| 15 - left wrist             | 32 - right foot index        |
+| 16 - right wrist            |                              |
 _source: [google](https://ai.google.dev/edge/mediapipe/solutions/vision/pose_landmarker)_
 
 Estracted landmarks in each frame is now ready for analysis. 
