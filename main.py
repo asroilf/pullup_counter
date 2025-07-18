@@ -10,7 +10,7 @@ def async_wrapper():
         event_loop.call_soon_threadsafe(asyncio.create_task, send_periodic_report())
 
 
-schedule.every().day.at("10:02").do(async_wrapper)
+schedule.every().day.at("23:30").do(async_wrapper)
 
 def run_schedule():
     LOG.info("run_schedule thread started")
