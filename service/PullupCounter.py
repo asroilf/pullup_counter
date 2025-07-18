@@ -8,70 +8,6 @@ MP_POSE = mp.solutions.pose
 class PullupCounter:
 
     @staticmethod
-    def _calc_angle(shoulder, elbow, wrist):
-        a = np.array(shoulder)
-        b = np.array(elbow)
-        c = np.array(wrist)
-    
-        radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - np.arctan2(a[1]-b[1], a[0]-b[0])
-        angle = np.abs(radians*180.0/np.pi)
-    
-        if angle>180.0:
-            angle = 360-angle
-    
-        return angle
-
-    @staticmethod
-    def _get_visible_side(landmarks, image):
-        left_shoulder = landmarks[MP_POSE.PoseLandmark.LEFT_SHOULDER.value].visibility
-        left_elbow = landmarks[MP_POSE.PoseLandmark.LEFT_ELBOW.value].visibility
-        left_wrist = landmarks[MP_POSE.PoseLandmark.LEFT_WRIST.value].visibility
-        left_hip = landmarks[MP_POSE.PoseLandmark.LEFT_HIP.value].visibility
-        left_visibility = (left_shoulder + left_elbow + left_wrist + left_hip)/4
-    
-        right_shoulder = landmarks[MP_POSE.PoseLandmark.RIGHT_SHOULDER.value].visibility
-        right_elbow = landmarks[MP_POSE.PoseLandmark.RIGHT_ELBOW.value].visibility
-        right_wrist = landmarks[MP_POSE.PoseLandmark.RIGHT_WRIST.value].visibility
-        right_hip = landmarks[MP_POSE.PoseLandmark.RIGHT_HIP.value].visibility
-        right_visibility = (right_shoulder + right_elbow + right_wrist + right_hip)/4
-        
-        if left_visibility > right_visibility:
-            cv2.putText(image, f"Left", [20, 160],
-                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
-            shoulder = [landmarks[MP_POSE.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_SHOULDER.value].y]
-            elbow = [landmarks[MP_POSE.PoseLandmark.LEFT_ELBOW.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_ELBOW.value].y]
-            wrist = [landmarks[MP_POSE.PoseLandmark.LEFT_WRIST.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_WRIST.value].y]
-            hip = [landmarks[MP_POSE.PoseLandmark.LEFT_HIP.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_HIP.value].y]
-            mouth = [landmarks[MP_POSE.PoseLandmark.MOUTH_LEFT.value].x, landmarks[MP_POSE.PoseLandmark.MOUTH_LEFT.value].y] 
-        else:
-            cv2.putText(image, f"Right", [20, 160],
-                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
-            shoulder = [landmarks[MP_POSE.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_SHOULDER.value].y]
-            elbow = [landmarks[MP_POSE.PoseLandmark.RIGHT_ELBOW.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_ELBOW.value].y]
-            wrist = [landmarks[MP_POSE.PoseLandmark.RIGHT_WRIST.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_WRIST.value].y]
-            hip = [landmarks[MP_POSE.PoseLandmark.RIGHT_HIP.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_HIP.value].y]
-            mouth = [landmarks[MP_POSE.PoseLandmark.MOUTH_RIGHT.value].x, landmarks[MP_POSE.PoseLandmark.MOUTH_RIGHT.value].y] 
-        return shoulder, elbow, wrist, hip, mouth
-
-    @staticmethod
-    def _depict_lines(image, shoulder, elbow, wrist, hip, mouth, arm_angle, body_angle, hanging, reps, result):
-        cv2.putText(image, f"shoulder: {str(shoulder[1])}", [20, 40],
-                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
-        cv2.putText(image, f"wrist: {str(wrist[1])}", [20, 60],
-                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
-        cv2.putText(image, f"arm_angle: {str(arm_angle)}", [20, 85],
-                                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
-        cv2.putText(image, f"body_angle: {str(body_angle)}", [20, 110],
-                                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
-        cv2.putText(image, f"reps: {str(reps)}", [20, 135],
-                                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
-        cv2.putText(image, f"hanging: {hanging}", [20, 185],
-                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
-        MP_DRAWING.draw_landmarks(image, result.pose_landmarks, MP_POSE.POSE_CONNECTIONS)
-
-
-
-    @staticmethod
     def count_reps(video):
         LOG.info("in the process of opening the video")
         cap = cv2.VideoCapture(f"./telegram/videos/{video}")
@@ -143,5 +79,69 @@ class PullupCounter:
             cap.release()
             cv2.destroyAllWindows()
         return rips    
+
+
+    @staticmethod
+    def _calc_angle(shoulder, elbow, wrist):
+        a = np.array(shoulder)
+        b = np.array(elbow)
+        c = np.array(wrist)
+    
+        radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - np.arctan2(a[1]-b[1], a[0]-b[0])
+        angle = np.abs(radians*180.0/np.pi)
+    
+        if angle>180.0:
+            angle = 360-angle
+    
+        return angle
+
+    @staticmethod
+    def _get_visible_side(landmarks, image):
+        left_shoulder = landmarks[MP_POSE.PoseLandmark.LEFT_SHOULDER.value].visibility
+        left_elbow = landmarks[MP_POSE.PoseLandmark.LEFT_ELBOW.value].visibility
+        left_wrist = landmarks[MP_POSE.PoseLandmark.LEFT_WRIST.value].visibility
+        left_hip = landmarks[MP_POSE.PoseLandmark.LEFT_HIP.value].visibility
+        left_visibility = (left_shoulder + left_elbow + left_wrist + left_hip)/4
+    
+        right_shoulder = landmarks[MP_POSE.PoseLandmark.RIGHT_SHOULDER.value].visibility
+        right_elbow = landmarks[MP_POSE.PoseLandmark.RIGHT_ELBOW.value].visibility
+        right_wrist = landmarks[MP_POSE.PoseLandmark.RIGHT_WRIST.value].visibility
+        right_hip = landmarks[MP_POSE.PoseLandmark.RIGHT_HIP.value].visibility
+        right_visibility = (right_shoulder + right_elbow + right_wrist + right_hip)/4
+        
+        if left_visibility > right_visibility:
+            cv2.putText(image, f"Left", [20, 160],
+                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
+            shoulder = [landmarks[MP_POSE.PoseLandmark.LEFT_SHOULDER.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_SHOULDER.value].y]
+            elbow = [landmarks[MP_POSE.PoseLandmark.LEFT_ELBOW.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_ELBOW.value].y]
+            wrist = [landmarks[MP_POSE.PoseLandmark.LEFT_WRIST.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_WRIST.value].y]
+            hip = [landmarks[MP_POSE.PoseLandmark.LEFT_HIP.value].x, landmarks[MP_POSE.PoseLandmark.LEFT_HIP.value].y]
+            mouth = [landmarks[MP_POSE.PoseLandmark.MOUTH_LEFT.value].x, landmarks[MP_POSE.PoseLandmark.MOUTH_LEFT.value].y] 
+        else:
+            cv2.putText(image, f"Right", [20, 160],
+                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
+            shoulder = [landmarks[MP_POSE.PoseLandmark.RIGHT_SHOULDER.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_SHOULDER.value].y]
+            elbow = [landmarks[MP_POSE.PoseLandmark.RIGHT_ELBOW.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_ELBOW.value].y]
+            wrist = [landmarks[MP_POSE.PoseLandmark.RIGHT_WRIST.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_WRIST.value].y]
+            hip = [landmarks[MP_POSE.PoseLandmark.RIGHT_HIP.value].x, landmarks[MP_POSE.PoseLandmark.RIGHT_HIP.value].y]
+            mouth = [landmarks[MP_POSE.PoseLandmark.MOUTH_RIGHT.value].x, landmarks[MP_POSE.PoseLandmark.MOUTH_RIGHT.value].y] 
+        return shoulder, elbow, wrist, hip, mouth
+
+    @staticmethod
+    def _depict_lines(image, shoulder, elbow, wrist, hip, mouth, arm_angle, body_angle, hanging, reps, result):
+        cv2.putText(image, f"shoulder: {str(shoulder[1])}", [20, 40],
+                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
+        cv2.putText(image, f"wrist: {str(wrist[1])}", [20, 60],
+                                             cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,255), 2, cv2.LINE_AA)
+        cv2.putText(image, f"arm_angle: {str(arm_angle)}", [20, 85],
+                                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
+        cv2.putText(image, f"body_angle: {str(body_angle)}", [20, 110],
+                                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
+        cv2.putText(image, f"reps: {str(reps)}", [20, 135],
+                                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
+        cv2.putText(image, f"hanging: {hanging}", [20, 185],
+                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 2, cv2.LINE_AA)
+        MP_DRAWING.draw_landmarks(image, result.pose_landmarks, MP_POSE.POSE_CONNECTIONS)
+
 
 
