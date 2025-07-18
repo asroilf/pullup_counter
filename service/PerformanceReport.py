@@ -1,8 +1,9 @@
 from models import User, DailyPerformance
 from datetime import datetime
-from .utils import LOG
+from .logger import LOG
 from peewee import fn
-class Report:
+
+class PerformanceReport:
 
     @staticmethod
     async def get_complete_report():
@@ -11,7 +12,7 @@ class Report:
             time = str(current_datetime.time())
             date = str(current_datetime.date())
 
-            users = await Report._get_today(date)
+            users = await PerformanceReport._get_today(date)
             complete_report = DailyPerformance.select(
                     DailyPerformance.user, 
                     fn.SUM(DailyPerformance.reps)
@@ -33,7 +34,7 @@ class Report:
                 else:
                     format += f"  #{i.user.username}\n"
                 places+=1
-                days, skipped, daily = await Report._get_user_report(i.user.username)
+                days, skipped, daily = await PerformanceReport._get_user_report(i.user.username)
                 for j in daily:
                     format+=j
                 format+=f"\n <b>Summary</b> : Workout days: {days-skipped} | Skipped days: {skipped} | Total reps: { i.reps }\n"

@@ -1,6 +1,6 @@
 from peewee import Model, IntegerField, DateField, CompositeKey, ForeignKeyField
 from .User import User
-from .db import DB
+from service.db import DB
 
 class DailyPerformance(Model):
     user = ForeignKeyField(User, backref='past_records')

@@ -1,7 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-from .utils import LOG 
+from .logger import LOG 
 
 MP_DRAWING = mp.solutions.drawing_utils
 MP_POSE = mp.solutions.pose

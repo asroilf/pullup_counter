@@ -1,5 +1,5 @@
 from peewee import Model, CharField
-from .db import DB
+from service.db import DB
 
 class User(Model):
     username = CharField(primary_key=True)

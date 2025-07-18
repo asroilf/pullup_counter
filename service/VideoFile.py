@@ -1,7 +1,7 @@
-from models import VideoHash, User, DailyPerformance
+from models import Video, User, DailyPerformance
 import pickle, aiofiles
 import videohash
-from .utils import LOG
+from .logger import LOG
 
 class VideoFile:
 

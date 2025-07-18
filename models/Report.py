@@ -1,7 +1,7 @@
 from peewee import *
-from .db import DB
+from service.db import DB
 
-class CompleteReport(Model):
+class Report(Model):
     message_id=IntegerField(primary_key=True)
     message = TextField()
 
